@@ -10,16 +10,30 @@ public class Location {
 
     int getX()
     {
-        return x;
+        return this.x;
     }
 
     int getY()
     {
-        return y;
+        return this.y;
     }
 
     @Override
     public String toString() {
         return "(" + x + "," + y + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!Location.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        Location location = (Location)obj;
+        return (this.getX() == location.getX()) && (this.getY() == location.getY());
     }
 }

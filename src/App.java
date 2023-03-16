@@ -12,8 +12,15 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         // pass the path to the file as a parameter
-        File file = new File(
+        File file;
+        if (args.length == 0) {
+            file = new File(
                 "F:\\Coding_2_0\\Polytech\\Projet\\ConverterSimutech\\SortCircJava\\ConvCirc\\basicCircuit.circ");
+        }
+        else {
+            file = new File(args[0]);
+        }
+
         Scanner sc = new Scanner(file);
         wires = new ArrayList<Wire>();
         comps = new ArrayList<Component>();
@@ -32,6 +39,11 @@ public class App {
                 createComponent(buffer);
             }
         }
+
+        /* Processing */
+        WireAnalyser wireAnalyser = new WireAnalyser(wires, comps);
+        wireAnalyser.analyse();
+
         for (Wire wire : wires) {
             System.out.println(wire);
         }

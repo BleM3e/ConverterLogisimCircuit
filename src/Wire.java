@@ -1,8 +1,8 @@
 public class Wire {
-    boolean is_x_equal;
-    Location e0;
-    Location e1;
-    int id;
+    private boolean is_x_equal;
+    public Location e0;
+    public Location e1;
+    private int id;
 
     Wire(Location e0, Location e1, int id) {
         this.is_x_equal = e0.getX() == e1.getX();
@@ -24,6 +24,19 @@ public class Wire {
             }
         }
         this.id = id;
+    }
+
+    public boolean hasSameEdge(Wire w) {
+        if (this.e0 == w.e0 || this.e0 == w.e1)
+            return true;
+        if (this.e1 == w.e0 || this.e1 == w.e1)
+            return true;
+
+        return false;
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     @Override
