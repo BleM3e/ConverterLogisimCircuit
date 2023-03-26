@@ -1,3 +1,4 @@
+package core;
 import java.util.Comparator;
 
 public class LocationComparator implements Comparator<Location> {

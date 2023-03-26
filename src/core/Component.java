@@ -1,3 +1,4 @@
+package core;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class Component {
             }
         }
         if (inputsComponents.size() != 0) {
-            System.out.println("Component.toString.inputsComponents.print");
+            // System.out.println("Component.toString.inputsComponents.print");
             result += " | all components inputs : ";
             for (Component component : inputsComponents) {
                 result += component.componentName + " ";

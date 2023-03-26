@@ -1,10 +1,50 @@
-import java.util.*;
+package core;
 
-public class Circuit {
-    public List<Wire> wires;
-    public List<Component> comps;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
-    private int wireId = 0;
+public class Core {
+
+    protected List<Wire> wires;
+    protected List<Component> comps;
+
+    static int wireId = 0;
+
+    public Core(File file) throws Exception {
+        Scanner sc = new Scanner(file);
+        wires = new ArrayList<Wire>();
+        comps = new ArrayList<Component>();
+
+        String buffer = "";
+        boolean isWire, isComp;
+
+        while (sc.hasNextLine()) {
+            buffer = sc.nextLine();
+            isWire = Pattern.matches("^[ \\t]*<wire.*", buffer);
+            if (isWire) {
+                createWire(buffer);
+            }
+            isComp = Pattern.matches("^[ \\t]*<comp.*", buffer);
+            if (isComp) {
+                createComponent(buffer);
+            }
+        }
+
+        /* Processing */
+        WireAnalyser wireAnalyser = new WireAnalyser(wires, comps);
+        wireAnalyser.analyse();
+
+        // for (Wire wire : wires) {
+        // System.out.println(wire);
+        // }
+        // for (Component comp : comps) {
+        // System.out.println(comp);
+        // }
+        sc.close();
+    }
 
     public void createWire(String str) {
         String result, theDigits[];
@@ -59,7 +99,22 @@ public class Circuit {
         comps.add(new Component(new Location(loc[0], loc[1]), componentName));
     }
 
-    /* public void sortWires() {
-        wires.sort(new WireComparator());
-    } */
+    public String toString() {
+        String result = "";
+        for (Wire wire : wires) {
+            result += wire + "\n";
+        }
+        for (Component comp : comps) {
+            result += comp + "\n";
+        }
+        return result;
+    }
+
+    public List<Wire> getWires() {
+        return this.wires;
+    }
+
+    public List<Component> getComps() {
+        return this.comps;
+    }
 }

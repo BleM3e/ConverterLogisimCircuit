@@ -1,3 +1,4 @@
+package core;
 public class Wire {
     private boolean is_x_equal;
     public Location e0;
