@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -10,17 +12,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 import core.Core;
+import translator.Translator;
 
 public class Window {
 
     private JTextArea ta;
     private File file;
 
-    Core translator;
+    Core core;
+    Translator translator;
 
     public Window() {
         //Creating the frame
-        JFrame frame = new JFrame("Circuit Translator");
+        JFrame frame = new JFrame("Circuit core");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800,600);
 
@@ -44,7 +48,7 @@ public class Window {
                 if (res == JFileChooser.APPROVE_OPTION) {
                     file = choose.getSelectedFile();
                     try {
-                        translator = new Core(file);
+                        core = new Core(file);
                     } catch (Exception e1) {
                         @SuppressWarnings("unused")
                         OpenFileJDialog d = new OpenFileJDialog();
@@ -68,14 +72,46 @@ public class Window {
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Press the button to convert");
         JButton converButton = new JButton("Convert");
+        converButton.setEnabled(false);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        JRadioButton isArduinoRadioButton = new JRadioButton("Is Arduino");
+        JRadioButton isLegacyRadioButton = new JRadioButton("Is Legacy Project");
+        buttonGroup.add(isArduinoRadioButton);
+        buttonGroup.add(isLegacyRadioButton);
+        // isArduinoRadioButton.addItemListener();
+
+        ActionListener radioButtonListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                converButton.setEnabled(true);
+            }
+        };
+
         //Display the converted file
         converButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ta.setText(translator.toString());
+                try {
+                    if (translator != null) translator = null;
+                    translator = new Translator(file, isArduinoRadioButton.isSelected());
+                } catch (Exception e1) {
+                    @SuppressWarnings("unused")
+                    OpenFileJDialog d = new OpenFileJDialog();
+                }
+                String text = translator.toString();
+                ta.setText(text);
+                StringSelection stringSelection = new StringSelection(text);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
             }
         });
+
+        isArduinoRadioButton.addActionListener(radioButtonListener);
+        isLegacyRadioButton.addActionListener(radioButtonListener);
+
         panel.add(label);
         panel.add(converButton);
+        panel.add(isArduinoRadioButton);
+        panel.add(isLegacyRadioButton);
 
 
 
@@ -89,4 +125,6 @@ public class Window {
     public File getFile() {
         return this.file;
     }
+
+
 }

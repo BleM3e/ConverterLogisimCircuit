@@ -8,6 +8,7 @@ public class Component {
     public List<Location> inputs;
     public List<Component> inputsComponents;
     public Wire outputWire;
+    public int componentId;
 
     Component(Location e, String componentName) {
         this.e = e;
@@ -15,6 +16,7 @@ public class Component {
         inputs = new ArrayList<Location>();
         inputsComponents = new ArrayList<Component>();
         listInputs();
+        this.componentId = -1;
     }
 
     public void listInputs() {
